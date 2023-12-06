@@ -27,6 +27,46 @@
 #include <algorithm>
 using namespace std; //this generally not good coding practice
 
+class TInd  //this defines a class of individuals
+{
+  public: 
+  TInd();  
+  double lambda;
+  double alpha;
+};
+TInd::TInd()
+{
+  lambda=0.0;
+  alpha=0.0;
+}
+
+class TPatch
+{
+  public:
+  TPatch();
+  vector<TInd> females;
+  vector<TInd> newfemales;
+};
+TPatch::TPatch()
+{
+  females.clear();
+  newfemales.clear();
+}
+
+TPatch world;
+
+int N0=10;
+double LAMBDA=2.0;
+double ALPHA=0.01;
+int TMAX=100;
+
+
+
+
+
+
+/*multi line comment*/
+
 //________________________________________________________________________________________
 //------------------------------------------------------Initialize Random Number Generator
 const gsl_rng *gBaseRand;
@@ -67,6 +107,47 @@ int poisson(double sd)
 
 const int RS = 100;                 // random seed
 
+void initialise_world()
+{
+  world.females.clear();
+  world.newfemales.clear();
+  for(int n=0;n<N0;n++)
+  {
+    TInd newind;
+    newind.lambda=LAMBDA;
+    newind.alpha=ALPHA;
+    world.females.push_back(newind);
+  }
+
+}
+
+void reproduce()
+{
+  double alpha_sum=0.0;
+  for(int f=0;f<world.females.size();f++)
+  {
+    alpha_sum=alpha_sum+world.females.at(f).alpha;
+  }
+  for(int f=0;f<world.females.size();f++)
+  {
+    double number_of_offspring=poisson(world.females.at(f).lambda/(1+alpha_sum));
+    for(int no=0;no<number_of_offspring;no++)
+    {
+      TInd newind;
+      newind.lambda=world.females.at(f).lambda;
+      newind.alpha=world.females.at(f).alpha; 
+      world.newfemales.push_back(newind);   
+    }
+  }
+}
+
+void death()
+{
+  world.females.clear();
+  world.females=world.newfemales;
+  world.newfemales.clear();
+}
+
 //________________________________________________________________________________________
 //---------------------------------------------------------------------------Main function
 /*The program is always executed starting from the main function, even if we write other
@@ -75,6 +156,16 @@ output of generated data, initialisation and running the life cycle of our model
 organism.*/
 int main()
 {
+  specify_rng(RS);
+  initialise_world(); //here we initialise environement
+  for(int t=0;t<TMAX;t++) //we go through the
+  {
+    cout<<t<<" "<<world.females.size()<<endl;
+    reproduce();
+    death();
+  }
+
+
   return 0;
 }
 
