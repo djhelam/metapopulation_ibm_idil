@@ -66,9 +66,9 @@ int N0=100;
 double LAMBDA=2.0;
 double ALPHA=0.01;
 int TMAX=1000;
-double DISPERSAL_PROBABILITY=1;
-double DISPERSAL_MORTALITY=0.0;
-double MUTATION_PROBABILITY=0.0;
+double DISPERSAL_PROBABILITY=0.5;
+double DISPERSAL_MORTALITY=0;
+double MUTATION_PROBABILITY=0.01;
 double MUTATION_EFFECT_SD=0;
 
 
@@ -189,7 +189,6 @@ void disperse()
     for(int nf=0;nf<world[x].newfemales.size();nf++)
     {
       world[x].females.push_back(world[x].newfemales.at(nf));
-      cout<<nf<<endl;
     }
     world[x].newfemales.clear();
   }
