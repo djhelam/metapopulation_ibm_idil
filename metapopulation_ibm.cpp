@@ -57,11 +57,11 @@ TPatch::TPatch()
   measured_dispersal=0.0;
 }
 
-const int NUMBER_OF_PATCHES=1;
+const int NUMBER_OF_PATCHES=100;
 
 TPatch world[NUMBER_OF_PATCHES];
 
-int REPLICATES=2;
+int REPLICATES=1;
 int N0=10;
 double LAMBDA=2.0;
 double ALPHA=0.01;
