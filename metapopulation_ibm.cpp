@@ -62,14 +62,14 @@ const int NUMBER_OF_PATCHES=100;
 TPatch world[NUMBER_OF_PATCHES];
 
 int REPLICATES=1;
-int N0=10;
+int N0=100;
 double LAMBDA=2.0;
 double ALPHA=0.01;
-int TMAX=100;
-double DISPERSAL_PROBABILITY=0.5;
-double DISPERSAL_MORTALITY=0;
+int TMAX=1000;
+double DISPERSAL_PROBABILITY=1;
+double DISPERSAL_MORTALITY=0.0;
 double MUTATION_PROBABILITY=0.0;
-double MUTATION_EFFECT_SD=0.1;
+double MUTATION_EFFECT_SD=0;
 
 
 
@@ -122,6 +122,8 @@ void initialise_world()
     world[x].females.clear();
     world[x].newfemales.clear();
     world[x].measured_dispersal=0.0;
+    //if(x==0)
+    //{
     for(int n=0;n<N0;n++)
     {
       TInd newind;
@@ -130,6 +132,7 @@ void initialise_world()
       newind.dispersal_probability=DISPERSAL_PROBABILITY;
       world[x].females.push_back(newind);
     }
+  //}
   }
 
 }
@@ -151,9 +154,12 @@ int find_patch(int x)
 
 void disperse()
 {
-  for(int x=0;x<NUMBER_OF_PATCHES;x++)
+  for(int x=0; x<NUMBER_OF_PATCHES;x++)
   {
     world[x].newfemales.clear();
+  }
+  for(int x=0;x<NUMBER_OF_PATCHES;x++)
+   {
     int population_size=world[x].females.size();
     int count_dispersers=0;
     for(int f=0; f<world[x].females.size();f++)
@@ -163,7 +169,8 @@ void disperse()
         count_dispersers++;
         int new_patch;
         new_patch=find_patch(x);
-        if(ran()<1-DISPERSAL_MORTALITY)
+
+        if(ran()<1.0-DISPERSAL_MORTALITY)
         {
           world[new_patch].newfemales.push_back(world[x].females.at(f));
         }
@@ -182,6 +189,7 @@ void disperse()
     for(int nf=0;nf<world[x].newfemales.size();nf++)
     {
       world[x].females.push_back(world[x].newfemales.at(nf));
+      cout<<nf<<endl;
     }
     world[x].newfemales.clear();
   }
