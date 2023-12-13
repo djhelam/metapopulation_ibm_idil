@@ -61,16 +61,16 @@ const int NUMBER_OF_PATCHES=100;
 
 TPatch world[NUMBER_OF_PATCHES];
 
-int REPLICATES=1;
-int N0=100;
+int REPLICATES=5;
+int N0=10;
 double LAMBDA=2.0;
 double ALPHA=0.01;
-int TMAX=1000;
+int TMAX=2000;
 double DISPERSAL_PROBABILITY=0.5;
-double DISPERSAL_MORTALITY=0;
+double DISPERSAL_MORTALITY=0.1;
 double MUTATION_PROBABILITY=0.01;
-double MUTATION_EFFECT_SD=0;
-
+double MUTATION_EFFECT_SD=0.1;
+double EXTINCTION_PROBABILITY=0.05;
 
 
 /*multi line comment*/
@@ -237,6 +237,18 @@ void death()
   }
 }
 
+void patch_extinction()
+{
+  for(int x=0;x<NUMBER_OF_PATCHES;x++)
+  {
+    if(ran()<EXTINCTION_PROBABILITY)
+    {
+      world[x].females.clear();
+      world[x].newfemales.clear();
+    }
+  }
+}
+
 //________________________________________________________________________________________
 //---------------------------------------------------------------------------Main function
 /*The program is always executed starting from the main function, even if we write other
@@ -261,6 +273,7 @@ int main()
      disperse();
      reproduce();
      death();
+     patch_extinction();
   }
   }
   op.close();
