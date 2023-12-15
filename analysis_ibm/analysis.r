@@ -16,12 +16,15 @@ for(m in 1:length(dispersal_mortality))
   plot(0,0,type="n",ylim=c(0,1),xlim=c(0,2000)) #make a blank plot
   for(r in 0) #for only one replicate
   {
+    if(mean(output$N[output$t==max(output$t & output$r==r)])>0) #if there are individuals
+    {
     dispersal=array() #store dispersal as a function of time
     for(t in 0:(time_max-1))
     {
       dispersal[(t+1)]=mean(output$measured_dispersal[output$r==r & output$t==t]) #mean dispersal accross all patches
     }
     lines(1:time_max,dispersal) #plot mean dispersal
+    }
   }
 }
 dev.off()
@@ -33,8 +36,11 @@ for(m in 1:length(dispersal_mortality)) #go through all dispersal mortality
   output=read.table(paste(ext_names,"/",mu_names[m],"/output.txt",sep=""),header=T) #read output file
   for(r in 0:(replicates-1)) # go through all replicates
   {
+    if(mean(output$N[output$t==max(output$t & output$r==r)])>0) #if there are individuals
+    {
     temp=data.frame(dispersal_mortality=dispersal_mortality[m],r=r,dispersal=mean(output$measured_dispersal[output$r==r & output$t==(time_max-1)])) #extract mean dispersal at the last time step
     plot_data=rbind(plot_data,temp) #append this data
+    }
   }
 }
 par(mfrow=c(1,1),mar=c(4,4,4,4)) # make a plot
